@@ -27,12 +27,8 @@ if __name__ == "__main__":
     # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
         my_socket.connect((IP, PORT))
-        if sys.argv[3] == 'register':
-            my_socket.send(bytes('REGISTER sip:' + sys.argv[4] +
-                           ' SIP/2.0', 'utf-8') + b'\r\n' +
-                           bytes('Expires: ' + str(expires_value), 'utf-8') +
-                           b'\r\n\r\n')
 
+        my_socket.send(bytes(INIT, 'utf-8') + b'\r\n')
         data = my_socket.recv(1024)
         print(data.decode('utf-8'))
 
