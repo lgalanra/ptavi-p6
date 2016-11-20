@@ -1,23 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 """
-Clase (y programa principal) para un servidor de eco en UDP simple
+Clase (y programa principal) para un servidor SIP peer2peer
 """
 
 import socketserver
 import sys
-import json
-import time
 
 
-class SIPRegisterHandler(socketserver.DatagramRequestHandler):
+class SIPHandler(socketserver.DatagramRequestHandler):
     """
-    SIP Register server class
+    Clase para servidor SIP p2p
     """
-    dicc = {}
-    expire = ''
-    lists = []
-    direction = ''
 
     def handle(self):
         """
@@ -45,42 +39,15 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         self.wfile.write(b"SIP/2.0 200 OK " + b'\r\n\r\n')
         print(self.dicc)
 
-    def register2json(self):
-        """
-        Método para almacenar correctamente los datos al json
-        """
-        exptime = time.strftime('%Y-%m-%d %H:%M:%S',
-                                time.gmtime(int(self.expire) + time.time()))
-        auxdicc = {'address': self.client_address[0], 'expires': exptime}
-
-        for l in self.lists:
-            if l[0] == self.direction:
-                self.lists.remove(l)
-        self.lists.append([self.direction, auxdicc])
-
-        for l in self.lists:
-            if l[1]['expires'] <= time.strftime('%Y-%m-%d %H:%M:%S',
-                                                time.gmtime(time.time())):
-                self.lists.remove(l)
-        json.dump(self.lists, open("registered.json", 'w'),
-                  sort_keys=True, indent=4, separators=(',', ': '))
-
-    def json2registered(self):
-        """
-        Método para comprobar al inicio si ya existía un json
-        """
-        try:
-            self.lists = json.load(open("registered.json", 'r'))
-        except:
-            pass
 
 if __name__ == "__main__":
     try:
-        PORT = int(sys.argv[1])
-    except PortError:
-        print("Introducir puerto escucha del servidor")
-    serv = socketserver.UDPServer(('', PORT), SIPRegisterHandler)
-    print("Lanzando servidor UDP de eco...")
+        IP = sys.argv[1]
+        PORT = int(sys.argv[2])
+    except ValueError:
+        print("Usage: python server.py IP port audio_file")
+    serv = socketserver.UDPServer(('', PORT), SIPHandler)
+    print("Listening...")
     try:
         serv.serve_forever()
     except KeyboardInterrupt:
