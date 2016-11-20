@@ -19,9 +19,9 @@ if __name__ == "__main__":
     except ValueError:
         sys.exit("Usage: client.py method receiver@IP:SIPport")
 
-    INIT = METHOD + ' sip:' + LOGIN + '@' + IP + 'SIP/2.0\r\n'
-    ACK = 'ACK sip: ' + LOGIN + '@' + IP + 'SIP/2.0\r\n'
-    BYE = 'BYE sip: ' + LOGIN + '@' + IP + 'SIP/2.0\r\n'
+    INIT = METHOD + ' sip:' + LOGIN + '@' + IP + ' SIP/2.0\r\n'
+    ACK = 'ACK sip: ' + LOGIN + '@' + IP + ' SIP/2.0\r\n'
+    BYE = 'BYE sip: ' + LOGIN + '@' + IP + ' SIP/2.0\r\n'
 
 
     # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
@@ -29,7 +29,16 @@ if __name__ == "__main__":
         my_socket.connect((IP, PORT))
 
         my_socket.send(bytes(INIT, 'utf-8') + b'\r\n')
-        data = my_socket.recv(1024)
-        print(data.decode('utf-8'))
+        text = my_socket.recv(1024)
+        info = text.decode('utf-8')
+
+        print(info)
+        print('hi')
+
+        if info == 'SIP/2.0 100 Trying\r\nSIP/2.0 180 Ring\r\nSIP/2.0 200 OK\r\n\r\n':
+            print('Enviamos ACK')
+            my_socket.send(bytes(ACK,'utf-8') + b'\r\n')
+            print('Enviamos BYE')
+            my_socket.send(bytes(BYE,'utf-8') + b'\r\n')
 
         print("Socket terminado.")
