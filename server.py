@@ -24,6 +24,12 @@ class SIPHandler(socketserver.DatagramRequestHandler):
         if info.startswith('INVITE'):
             self.wfile.write(b'SIP/2.0 100 Trying\r\n')
             self.wfile.write(b'SIP/2.0 180 Ring\r\nSIP/2.0 200 OK\r\n\r\n')
+        elif info.startswith('ACK'):
+            pass #envío RTP
+        elif info.startswith('BYE'):
+            self.wfile.write(b'Finishing...')
+        else:
+            self.wfile.write(b'SIP/2.0 405 Method not Allowed\r\n\r\n')
 
 if __name__ == "__main__":
     try:
