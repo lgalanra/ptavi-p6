@@ -19,12 +19,11 @@ class SIPHandler(socketserver.DatagramRequestHandler):
         """
         text = self.rfile.read()
         info = text.decode('utf-8')
-        print('Recibimos ' + info)
+        print('Recibimos -> ' + info)
 
         if info.startswith('INVITE'):
-            pass
-
-
+            self.wfile.write(b'SIP/2.0 100 Trying\r\n')
+            self.wfile.write(b'SIP/2.0 180 Ring\r\nSIP/2.0 200 OK\r\n\r\n')
 
 if __name__ == "__main__":
     try:
