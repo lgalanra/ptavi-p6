@@ -19,6 +19,11 @@ if __name__ == "__main__":
     except ValueError:
         sys.exit("Usage: client.py method receiver@IP:SIPport")
 
+    INIT = METHOD + ' sip:' + LOGIN + '@' + IP + 'SIP/2.0\r\n'
+    ACK = 'ACK sip: ' + LOGIN + '@' + IP + 'SIP/2.0\r\n'
+    BYE = 'BYE sip: ' + LOGIN + '@' + IP + 'SIP/2.0\r\n'
+
+
     # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
         my_socket.connect((IP, PORT))
