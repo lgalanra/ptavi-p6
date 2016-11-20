@@ -17,27 +17,13 @@ class SIPHandler(socketserver.DatagramRequestHandler):
         """
         Método principal para manejar mensajes cliente servidor
         """
-        if self.lists == []:
-            self.json2registered()
+        text = self.rfile.read()
+        info = text.decode('utf-8')
+        print('Recibimos ' + info)
 
-        print(self.client_address)
-        request = self.rfile.read().decode('utf-8')
-        print(request)
-        fields = request.split(' ')
+        if info.startswith('INVITE'):
+            pass
 
-        if fields[0] == 'REGISTER':
-            login = fields[1].split(':')
-            self.direction = login[1]
-            self.dicc[self.direction] = self.client_address[0]
-            aux = fields[3].split('\r')
-
-            self.expire = int(aux[0])
-            if self.expire == 0:
-                del self.dicc[self.direction]
-
-        self.register2json()
-        self.wfile.write(b"SIP/2.0 200 OK " + b'\r\n\r\n')
-        print(self.dicc)
 
 
 if __name__ == "__main__":
