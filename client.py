@@ -14,8 +14,8 @@ if __name__ == "__main__":
         METHOD = sys.argv[1]
         destination = str(sys.argv[2])
         LOGIN = destination[:destination.find('@')]
-        IP = destination[destination.find('@')+1 : destination.find(':')]
-        PORT = int(destination[destination.find(':')+1 :])
+        IP = destination[destination.find('@') + 1: destination.find(':')]
+        PORT = int(destination[destination.find(':') + 1:])
     except ValueError:
         sys.exit("Usage: client.py method receiver@IP:SIPport")
 
@@ -38,10 +38,10 @@ if __name__ == "__main__":
 
         print(info)
 
-        if (info == 'SIP/2.0 100 Trying\r\n\r\n SIP/2.0 180 Ring\r\n\r\n SIP/2.0 200 OK\r\n\r\n'):
+        if (info == 'SIP/2.0 100 Trying\r\n\r\n SIP/2.0 ' +
+                '180 Ring\r\n\r\n SIP/2.0 200 OK\r\n\r\n'):
             print('Enviamos ACK')
-            my_socket.send(bytes(ACK,'utf-8'))
+            my_socket.send(bytes(ACK, 'utf-8'))
             text = my_socket.recv(1024)
-
 
     print("Socket terminado.")
