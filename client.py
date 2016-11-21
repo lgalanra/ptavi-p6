@@ -37,6 +37,7 @@ if __name__ == "__main__":
         if info == 'SIP/2.0 100 Trying\r\nSIP/2.0 180 Ring\r\nSIP/2.0 200 OK\r\n\r\n':
             print('Enviamos ACK')
             my_socket.send(bytes(ACK,'utf-8') + b'\r\n')
+            text = my_socket.recv(1024)
             print('Enviamos BYE')
             my_socket.send(bytes(BYE,'utf-8') + b'\r\n')
             text = my_socket.recv(1024)
