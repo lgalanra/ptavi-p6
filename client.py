@@ -19,27 +19,29 @@ if __name__ == "__main__":
     except ValueError:
         sys.exit("Usage: client.py method receiver@IP:SIPport")
 
-    INIT = METHOD + ' sip:' + LOGIN + '@' + IP + ' SIP/2.0\r\n'
-    ACK = 'ACK sip: ' + LOGIN + '@' + IP + ' SIP/2.0\r\n'
-    BYE = 'BYE sip: ' + LOGIN + '@' + IP + ' SIP/2.0\r\n'
+    INIT = METHOD + ' sip:' + LOGIN + '@' + IP + ' SIP/2.0\r\n\r\n'
+    ACK = 'ACK sip:' + LOGIN + '@' + IP + ' SIP/2.0\r\n\r\n'
+    BYE = 'BYE sip:' + LOGIN + '@' + IP + ' SIP/2.0\r\n\r\n'
 
-
+    if (METHOD=='INVITE'):
+        mensaje = INIT
+    elif (METHOD == 'BYE'):
+        mensaje = BYE
     # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
         my_socket.connect((IP, PORT))
-
-        my_socket.send(bytes(INIT, 'utf-8') + b'\r\n')
+        my_socket.send(bytes(mensaje, 'utf-8'))
         text = my_socket.recv(1024)
         info = text.decode('utf-8')
 
         print(info)
 
-        if info == 'SIP/2.0 100 Trying\r\nSIP/2.0 180 Ring\r\nSIP/2.0 200 OK\r\n\r\n':
+        if (info == 'SIP/2.0 100 Trying\r\n\r\n SIP/2.0 180 Ring\r\n\r\n SIP/2.0 200 OK\r\n\r\n'):
             print('Enviamos ACK')
-            my_socket.send(bytes(ACK,'utf-8') + b'\r\n')
+            my_socket.send(bytes(ACK,'utf-8'))
             text = my_socket.recv(1024)
-            print('Enviamos BYE')
-            my_socket.send(bytes(BYE,'utf-8') + b'\r\n')
-            text = my_socket.recv(1024)
+            #print('Enviamos BYE')
+            #my_socket.send(bytes(BYE,'utf-8') + b'\r\n')
+            #text = my_socket.recv(1024)
 
     print("Socket terminado.")
