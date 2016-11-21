@@ -23,14 +23,16 @@ if __name__ == "__main__":
     ACK = 'ACK sip:' + LOGIN + '@' + IP + ' SIP/2.0\r\n\r\n'
     BYE = 'BYE sip:' + LOGIN + '@' + IP + ' SIP/2.0\r\n\r\n'
 
-    if (METHOD=='INVITE'):
-        mensaje = INIT
+    if (METHOD == 'INVITE'):
+        message = INIT
     elif (METHOD == 'BYE'):
-        mensaje = BYE
+        message = BYE
+
     # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
         my_socket.connect((IP, PORT))
-        my_socket.send(bytes(mensaje, 'utf-8'))
+
+        my_socket.send(bytes(message, 'utf-8'))
         text = my_socket.recv(1024)
         info = text.decode('utf-8')
 
@@ -40,8 +42,6 @@ if __name__ == "__main__":
             print('Enviamos ACK')
             my_socket.send(bytes(ACK,'utf-8'))
             text = my_socket.recv(1024)
-            #print('Enviamos BYE')
-            #my_socket.send(bytes(BYE,'utf-8') + b'\r\n')
-            #text = my_socket.recv(1024)
+
 
     print("Socket terminado.")
